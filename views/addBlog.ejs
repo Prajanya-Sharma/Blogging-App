@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>blog Page</title>
+    <%- include('./partials/head') %>
+</head>
+<body>
+    <%- include('./partials/navbar') %>
+
+    <div class="container mt-3">
+        <form action="/blog" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="title" class="form-label">Title for Blog</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="Title for blog">
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="body" name="body" placeholder="Content for blog">
+                <label for="body">Blog content</label>
+            </div>
+
+            <div class="mb-3">
+                <label for="coverImage" class="form-label">Upload File</label>
+                <input type="file" class="form-control" id="coverImage" name="coverImage" required> <!-- Added 'name' attribute -->
+                <div id="fileFeedback" class="mt-2"></div>
+            </div>
+
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">Submit form</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('coverImage').addEventListener('change', function () {
+            const fileFeedback = document.getElementById('fileFeedback');
+            if (this.files.length > 0) {
+                fileFeedback.innerHTML = "File selected: " + this.files[0].name;
+                fileFeedback.style.color = 'green';
+            } else {
+                fileFeedback.innerHTML = "";
+            }
+        });
+    </script>
+
+    <%- include('./partials/script') %>
+</body>
+</html>

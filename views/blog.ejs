@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= blog.title %></title>
+    <!-- Include custom head partials -->
+    <%- include('./partials/head') %>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Blog Styles */
+        h1 {
+            font-size: 2.5rem;
+            color: #343a40;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        /* Comment Form */
+        .form-control {
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Comments Section */
+        .comments-section {
+            margin-top: 30px;
+        }
+
+        .comment-box {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .profile-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 2px solid #007bff;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #343a40;
+        }
+
+        .comment-date {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .comment-content {
+            margin-top: 10px;
+        }
+
+        .comment-content p {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <%- include('./partials/navbar') %>
+
+    <div class="container mt-4">
+        <h1><%= blog.title %></h1>
+        <img src="<%= blog.coverImageUrl %>" alt="Blog Cover Image">
+        <p><%= blog.body %></p>
+    </div>
+
+    <div class="container mt-6">
+        <h1>Comments</h1>
+        <% if (locals.user) { %>
+            <!-- Use blogID passed from the server -->
+            <form action="/blog/comment/<%= blog._id %>" method="POST">
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="content" placeholder="Add a comment" required>
+                </div>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+        <% } else { %>
+            <p>Please log in to leave a comment.</p>
+        <% } %>
+    </div>
+    
+    <div class="comments-section">
+        <% comments.forEach(comment => { %>
+            <div class="comment-box">
+                <div class="comment-header">
+                    <!-- User Profile Image (Check if createdBy is populated) -->
+                    <% if (comment.createdBy) { %>
+                        <img class="profile-image" src="<%= comment.createdBy.profileImageURL %>" alt="Profile Image">
+                        
+                        <!-- User Info -->
+                        <div class="user-info">
+                            <h3 class="user-name"><%= comment.createdBy.fullName %></h3>
+                            <p class="comment-date"><%= new Date(comment.createdAt).toLocaleDateString() %></p>
+                        </div>
+                    <% } else { %>
+                        <div class="user-info">
+                            <h3 class="user-name">Anonymous</h3>
+                            <p class="comment-date"><%= new Date(comment.createdAt).toLocaleDateString() %></p>
+                        </div>
+                    <% } %>
+                </div>
+    
+                <!-- Comment Content -->
+                <div class="comment-content">
+                    <p><%= comment.content %></p>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+    
+    
+    <%- include('./partials/script') %>
+</body>
+</html>
